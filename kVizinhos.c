@@ -15,8 +15,9 @@ typedef struct Amostra {
 	int distancia;
 } Amostra;
 
-// Função para preencher base de dados com amostras """aleatórias"""
-// AVISO: Isto é uma gambiarra. Na vida real, você abriria um arquivo com os dados verdadeiros já classificados
+// Função para preencher base de dados com amostras "aleatórias"
+// AVISO: Na vida real, você abriria um arquivo com os dados verdadeiros já classificados. Esta função é apenas uma simplificação e
+// não deve ser usada em aplicações reais dada a aleatoriedade e imprecisão 
 Amostra * preencheVizinhos(int numVizinhos) {
 	
 	Amostra * vizinhos = (Amostra *) malloc(sizeof(Amostra) * numVizinhos);
@@ -31,11 +32,22 @@ Amostra * preencheVizinhos(int numVizinhos) {
 	return vizinhos;
 }
 
-// Função para printar os dados/vizinhos já classificados do conjunto de dados
+// Função para mostrar os dados/vizinhos já classificados do conjunto de dados
 void printaVizinhos(Amostra * vizinhos, int numVizinhos) {
-	printf("PRINTANDO LISTA DE %d VIZINHOS:\n", numVizinhos);
+	printf("\n");
+	printf("LISTA TOTAL DE %d VIZINHOS:\n", numVizinhos);
 	for(int i = 0; i < numVizinhos; i++)
 		printf("> Vizinho %d: x = %d, y = %d, classe = %d\n", i+1, vizinhos[i].x, vizinhos[i].y, vizinhos[i].classe);
+	printf("\n");
+}
+
+// Função para mostrar os K dados/vizinhos mais próximos em relação a nova amostra
+void printaKVizinhos(Amostra * vizinhos, int k){
+	printf("\n");
+	printf("LISTA DE %d VIZINHOS MAIS PROXIMOS DA AMOSTRA:\n", k);
+	for(int i = 0; i < k; i++)
+		printf("> Vizinho %d: x = %d, y = %d, classe = %d\n", i+1, vizinhos[i].x, vizinhos[i].y, vizinhos[i].classe);
+	printf("\n");
 }
 
 // Função de comparação de distancias, para ser usada na função de ordenação já embutida do C
@@ -67,6 +79,8 @@ int classifiacao(Amostra vizinhos[], Amostra p, int k, int numVizinhos) {
         
     qsort(vizinhos, numVizinhos, sizeof(Amostra), comparaAmostras);
  
+ 	printaKVizinhos(vizinhos, k);
+
     int freq1 = 0;
     int freq2 = 0;
     for (int i = 0; i < k; i++) {
@@ -75,9 +89,6 @@ int classifiacao(Amostra vizinhos[], Amostra p, int k, int numVizinhos) {
         else if (vizinhos[i].classe == 1)
             freq2++;
     }
- 
- 
-
 
     return (freq1 > freq2 ? 0 : 1);
 }
@@ -111,7 +122,7 @@ int main() {
 	
 	int classe = classifiacao(vizinhos, p, k, numVizinhos);
 
-	printf("A classe do dado p eh: %d\n", classe);
+	printf("Classe da nova amostra: %d\n", classe);
 	
 	free(vizinhos);
 
